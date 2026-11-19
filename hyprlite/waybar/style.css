@@ -1,0 +1,77 @@
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+    border: none;
+    min-height: 0;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+    background: transparent;
+}
+
+/* LEFT PILL */
+#custom-arch,
+#clock {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 8px 12px;
+}
+
+#custom-arch {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 18px;
+    color: #cba6f7;
+    background: #1e1e2e;
+    border-radius: 20px 0 0 20px;
+    padding: 8px 12px 8px 15px;
+}
+
+#clock {
+    border-radius: 0 20px 20px 0;
+    padding-right: 15px;
+}
+
+/* CENTRE PILL */
+#workspaces {
+    background: #1e1e2e;
+    border-radius: 20px;
+    padding: 5px 12px;
+}
+
+#workspaces button {
+    color: #6c7086;
+    padding: 0 8px;
+    background: transparent;
+    border-radius: 20px;
+}
+
+#workspaces button.active {
+    color: #cba6f7;
+}
+
+/* RIGHT PILL */
+#custom-audio,
+#network {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 8px 12px;
+}
+
+#custom-audio {
+    color: #cba6f7;
+    border-radius: 20px 0 0 20px;
+    padding-left: 15px;
+}
+
+#network {
+    border-radius: 0 20px 20px 0;
+    padding-right: 15px;
+}
+
+

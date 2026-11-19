@@ -1,0 +1,92 @@
+
+* {
+    bg: #1e1e2edd;
+    fg: #cdd6f4;
+    mauve: #cba6f7;
+    surface: #313244bb;
+    overlay: #6c7086;
+    background-color: transparent;
+    text-color: @fg;
+    border-radius: 0px;
+}
+
+window {
+    width: 450px;
+    height: 550px;
+    background-color: @bg;
+    border: 1px;
+    border-color: #cba6f780;
+    border-radius: 0px;
+    padding: 12px;
+}
+
+mainbox {
+    background-color: transparent;
+    children: [ "message", "inputbar", "listview" ];
+    spacing: 0px 12px 12px 12px;
+}
+
+message {
+    background-color: transparent;
+    padding: 2px 12px 24px 12px;
+    border: 0px;
+}
+
+textbox {
+    background-color: transparent;
+    text-color: @mauve;
+    font: "monospace 9";
+    horizontal-align: 0.5;
+}
+
+inputbar {
+    background-color: @surface;
+    padding: 6px;
+    border: 0px;
+    border-radius: 0px;
+    spacing: 8px;
+    children: [ "prompt", "entry" ];
+}
+
+prompt {
+    background-color: transparent;
+    text-color: @mauve;
+    font: "monospace 11";
+}
+
+entry {
+    background-color: transparent;
+    text-color: @fg;
+    placeholder: "________________";
+    placeholder-color: @overlay;
+    font: "monospace 10";
+}
+
+listview {
+    background-color: transparent;
+    columns: 1;
+    lines: 9;
+    spacing: 2px;
+    fixed-height: false;
+    border: 0px;
+}
+
+element {
+    background-color: transparent;
+    text-color: @fg;
+    padding: 5px;
+    border: 0px;
+    border-radius: 0px;
+}
+
+element selected.normal {
+    background-color: @surface;
+    text-color: @mauve;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    font: "monospace 10";
+}
+

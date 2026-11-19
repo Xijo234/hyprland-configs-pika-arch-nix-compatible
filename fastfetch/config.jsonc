@@ -1,0 +1,52 @@
+{
+  "logo": {
+    "type": "kitty-direct",
+    "source": "~/Pictures/ryodecors/needle.png",
+    "width": 12,
+    "height": 8,
+    "padding": {
+      "left": 3,
+      "right": 5,
+      "top": 0
+    }
+  },
+  "display": {
+    "color": {
+      "keys": "38;2;226;52;42"
+    }
+  },
+  "modules": [
+    {
+      "format": "\u001b[38;2;226;52;42m──\u001b[0m \u001b[1;38;2;243;237;225mXIJO\u001b[0m \u001b[38;2;58;46;36m────────────────────────────\u001b[0m",
+      "type": "custom"
+    },
+    {
+      "format": "\u001b[38;2;226;52;42m■\u001b[0m \u001b[38;2;143;135;112mArch btw\u001b[0m",
+      "type": "custom"
+    },
+    {
+      "key": "|",
+      "type": "uptime"
+    },
+    {
+      "key": "|",
+      "type": "cpu"
+    },
+    {
+      "key": "|",
+      "type": "memory"
+    },
+    {
+      "key": "|󰋊",
+      "type": "disk"
+    },
+    {
+      "key": "|󰢮",
+      "type": "gpu"
+    },
+    {
+      "format": "\u001b[38;2;226;52;42m──\u001b[0m \u001b[1;38;2;243;237;225m\u001b[0m \u001b[38;2;58;46;36m────\u001b[0m",
+      "type": "custom"
+    }
+  ]
+}

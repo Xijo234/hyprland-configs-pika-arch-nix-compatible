@@ -1,0 +1,6 @@
+configuration {
+    show-icons: true;
+    font: "JetBrainsMono Nerd Font 11";
+}
+
+@theme "theme"

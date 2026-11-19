@@ -1,0 +1,208 @@
+
+#!/usr/bin/env bash
+
+if pgrep -f '[r]ofi.*-name cheatsheet' >/dev/null; then
+    pkill -f '[r]ofi.*-name cheatsheet'
+    exit 0
+fi
+
+CONFIG="$HOME/.config/hyprlite/hyprland.lua"
+THEME="$HOME/.config/rofi/cheatsheet/style.rasi"
+
+python - "$CONFIG" <<'PY' | rofi -dmenu -i -name cheatsheet -p "" \
+    -mesg '<span font_desc="monospace 11" foreground="#cba6f7">_  __ ____    ______
+  | |/ //  _/   / / __ \
+  |   / / /__  / / / / /
+ /   |_/ // /_/ / /_/ /
+/_/|_/___/\____/\____/</span>' \
+    -theme "$THEME"
+
+import re
+import sys
+import ast
+
+with open(sys.argv[1], encoding="utf-8") as f:
+    config = f.read()
+
+
+def split_args(source):
+    args = []
+    depth = 0
+    quote = None
+    escaped = False
+    start = 0
+
+    for i, char in enumerate(source):
+        if escaped:
+            escaped = False
+            continue
+        if char == "\\" and quote:
+            escaped = True
+            continue
+        if char in ("'", '"'):
+            if quote == char:
+                quote = None
+            elif quote is None:
+                quote = char
+            continue
+        if quote:
+            continue
+        if char in "({[":
+            depth += 1
+        elif char in ")}]":
+            depth -= 1
+        elif char == "," and depth == 0:
+            args.append(source[start:i].strip())
+            start = i + 1
+
+    args.append(source[start:].strip())
+    return args
+
+
+def get_calls(source):
+    calls = []
+
+    for match in re.finditer(r"hl\.bind\s*\(", source):
+        start = match.end()
+        depth = 1
+        quote = None
+        escaped = False
+
+        for i in range(start, len(source)):
+            c = source[i]
+
+            if escaped:
+                escaped = False
+                continue
+            if c == "\\" and quote:
+                escaped = True
+                continue
+            if c in ("'", '"'):
+                if quote == c:
+                    quote = None
+                elif quote is None:
+                    quote = c
+                continue
+            if quote:
+                continue
+            if c == "(":
+                depth += 1
+            elif c == ")":
+                depth -= 1
+                if depth == 0:
+                    calls.append(source[start:i])
+                    break
+
+    return calls
+
+
+def resolve_key(expr):
+    expr = expr.replace("mainMod", '"SUPER"')
+
+    tokens = re.findall(
+        r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|[A-Za-z_]\w*|\.\.',
+        expr
+    )
+
+    result = []
+
+    for token in tokens:
+        if token == "..":
+            continue
+        if token.startswith(("'", '"')):
+            result.append(ast.literal_eval(token))
+        else:
+            return None
+
+    key = "".join(result)
+    key = re.sub(r"\s+", " ", key).strip()
+
+    return key or None
+
+
+def describe(action):
+    command = re.search(r'exec_cmd\(\s*["\']([^"\']+)', action)
+
+    if command:
+        cmd = command.group(1)
+
+        known = {
+            "kitty": "Open Kitty",
+            "yazi": "Open Yazi",
+            "cliphist list": "Open clipboard",
+            "zen-browser": "Open Zen",
+            "hyprmod": "Open Hyprmod",
+            "obsidian": "Open Obsidian",
+            "hyprlock": "Lock screen",
+            "nvim": "Open Neovim",
+            "kitty -e btop": "Open btop",
+            "playerctl next": "Next track",
+            "playerctl previous": "Previous track",
+            "playerctl play-pause": "Play / pause",
+            "hyprctl dispatch overview:toggle": "Toggle overview",
+            "~/.config/rofi/launchers/type-2/launcher.sh": "Open launcher",
+            "~/.config/rofi/powermenu/type-2/powermenu.sh": "Open power menu",
+            "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-": "Volume down",
+        }
+
+        if cmd in known:
+            return known[cmd]
+        if "set-volume" in cmd and "5%+" in cmd:
+            return "Volume up"
+
+        return "Run command"
+
+    if "window.close" in action:
+        return "Close window"
+    if "window.float" in action:
+        return "Toggle floating"
+    if "togglesplit" in action:
+        return "Toggle split"
+    if "focus" in action:
+        direction = re.search(r'direction\s*=\s*["\']([^"\']+)', action)
+        workspace = re.search(r'workspace\s*=\s*["\']([^"\']+)', action)
+
+        if direction:
+            return "Focus " + direction.group(1)
+        if workspace:
+            return "Switch workspace"
+        if "workspace = i" in action:
+            return "Switch workspace"
+
+        return "Focus window"
+
+    if "window.move" in action:
+        return "Move window"
+    if "toggle_special" in action:
+        return "Toggle special workspace"
+    if "window.drag" in action:
+        return "Move window"
+    if "window.resize" in action:
+        return "Resize window"
+    if "layout" in action:
+        return "Change layout"
+
+    return "Other"
+
+
+entries = []
+
+for call in get_calls(config):
+    args = split_args(call)
+
+    if len(args) < 2:
+        continue
+
+    key = resolve_key(args[0])
+
+    if not key:
+        continue
+
+    description = describe(args[1])
+    entries.append((key, description))
+
+for key, description in entries:
+    print(f"* {key:<25} {description}")
+
+PY
+

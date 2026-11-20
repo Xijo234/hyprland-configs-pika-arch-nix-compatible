@@ -9,7 +9,7 @@ Make sure Git is installed on your system.
 ### 2. Clone the repository
 
 ```bash
-git clone https://github.com/Xijo234/arch-configs.git && cd arch-configs
+git clone https://github.com/Xijo234/hyprland-configs-pika-arch-nix-compatible.git && cd arch-configs
 ```
 
 ### 3. Run the installer
